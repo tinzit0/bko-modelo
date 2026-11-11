@@ -3,7 +3,7 @@
 // continúa desde el mismo punto con su primera interacción. Se silencia al ocultar la pestaña.
 const STORE = 'bko-music';
 const POSITION = 'bko-music-time';
-const VOLUME = 0.55;
+const VOLUME = 0.35;
 const FADE_IN = 2500;
 const FADE_OUT = 1200;
 
