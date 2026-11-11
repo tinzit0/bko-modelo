@@ -1,4 +1,4 @@
-// Música ambiental: reproduce assets/audio/musica.mp3 en bucle, con entrada y salida suaves.
+// Música ambiental: reproduce assets/audio/musica-2.mp3 en bucle, con entrada y salida suaves.
 // Nunca suena sola: el navegador exige un clic. Si el visitante la activó, al cambiar de página
 // continúa desde el mismo punto con su primera interacción. Se silencia al ocultar la pestaña.
 const STORE = 'bko-music';
@@ -28,7 +28,7 @@ function fadeTo(target, ms, done) {
 
 function getAudio() {
   if (audio) return audio;
-  audio = new Audio(new URL('../assets/audio/musica.mp3', import.meta.url).href);
+  audio = new Audio(new URL('../assets/audio/musica-2.mp3', import.meta.url).href);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
