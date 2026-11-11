@@ -10,7 +10,8 @@ const FADE_OUT = 1200;
 let audio, button, playing = false, fadeFrame = 0;
 
 function remember(on) { try { localStorage.setItem(STORE, on ? 'on' : 'off'); } catch {} }
-function wanted() { try { return localStorage.getItem(STORE) === 'on'; } catch { return false; } }
+// Suena por defecto; solo se queda en silencio si el visitante la pausó a propósito.
+function wanted() { try { return localStorage.getItem(STORE) !== 'off'; } catch { return true; } }
 function savedTime() { try { return Number(sessionStorage.getItem(POSITION)) || 0; } catch { return 0; } }
 function saveTime() { try { if (audio) sessionStorage.setItem(POSITION, String(audio.currentTime)); } catch {} }
 
@@ -77,16 +78,25 @@ export function initMusic() {
   document.body.append(button);
   render();
 
-  // Preferencia guardada: se reanuda con la primera interacción del visitante en esta página.
+  // Arranque automático: intenta sonar al cargar. Si el navegador bloquea el audio sin interacción
+  // (Chrome, Safari y Edge lo hacen en la primera visita), empieza con el primer clic, toque o tecla.
   if (wanted()) {
-    button.classList.add('is-waiting');
+    const events = ['pointerdown', 'touchend', 'keydown'];
     const resume = e => {
-      if (e.target.closest?.('.music-toggle')) return;
-      button.classList.remove('is-waiting');
-      ['pointerdown', 'keydown'].forEach(n => removeEventListener(n, resume, true));
+      if (e.target.closest?.('.music-toggle')) { stop(); return; }
+      stop();
       if (wanted()) play();
     };
-    ['pointerdown', 'keydown'].forEach(n => addEventListener(n, resume, true));
+    const stop = () => { button.classList.remove('is-waiting'); events.forEach(n => removeEventListener(n, resume, true)); };
+    const a = getAudio();
+    a.play().then(() => {
+      playing = true;
+      render();
+      fadeTo(VOLUME, FADE_IN);
+    }).catch(() => {
+      button.classList.add('is-waiting');
+      events.forEach(n => addEventListener(n, resume, true));
+    });
   }
 
   // Pestaña oculta: silencio; al volver, continúa si estaba sonando.
