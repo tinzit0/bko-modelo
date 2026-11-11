@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.supabase/
+supabase/.temp/
+artifacts/
+*.log
+
+# Archivos temporales de Word y del editor
+~$*
+.vscode/
